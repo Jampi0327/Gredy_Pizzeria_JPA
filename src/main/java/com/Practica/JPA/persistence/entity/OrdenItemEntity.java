@@ -1,5 +1,6 @@
 package com.Practica.JPA.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,7 @@ public class OrdenItemEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_order", referencedColumnName = "id_order", updatable = false, insertable = false)
+    @JsonIgnore
     private OrderEntity order;
 
     @OneToOne

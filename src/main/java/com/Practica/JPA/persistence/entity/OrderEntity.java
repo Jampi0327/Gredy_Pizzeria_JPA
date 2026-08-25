@@ -1,9 +1,11 @@
 package com.Practica.JPA.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.sql.results.graph.Fetch;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -36,11 +38,12 @@ public class OrderEntity {
     private String additionalNotes;
 
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="id_customer", referencedColumnName = "id_customer", insertable = false, updatable = false)
+    @JsonIgnore
     private CustomerEntity customer;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order" , fetch = FetchType.EAGER)
     private List<OrdenItemEntity> items;
 
 }
