@@ -3,13 +3,18 @@ package com.Practica.JPA.service;
 import com.Practica.JPA.persistence.entity.PizzaEntity;
 import com.Practica.JPA.persistence.repository.PizzaPagSortRepository;
 import com.Practica.JPA.persistence.repository.PizzaRepository;
+import com.Practica.JPA.service.dto.updatePizzaPriceDto;
+import com.Practica.JPA.service.exception.EmailApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -52,6 +57,16 @@ public class PizzaService {
 
         this.pizzaRepository.deleteById(idPizza);
     }
+
+    @Transactional(noRollbackFor = EmailApiException.class, propagation = Propagation.REQUIRED)
+    public void updatePrice(updatePizzaPriceDto  dto){
+         this.pizzaRepository.updatePrice(dto);
+         this.sendEmail();
+    }
+    private void sendEmail(){
+        throw new EmailApiException();
+    }
+
     public List<PizzaEntity> getWith(String ingredient) {
         return this.pizzaRepository.findAllByAvaiableTrueAndDescriptionContainingIgnoreCase(ingredient);
 

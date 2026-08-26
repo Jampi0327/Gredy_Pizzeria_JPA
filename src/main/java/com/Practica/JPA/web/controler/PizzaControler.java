@@ -2,6 +2,7 @@ package com.Practica.JPA.web.controler;
 
 import com.Practica.JPA.persistence.entity.PizzaEntity;
 import com.Practica.JPA.service.PizzaService;
+import com.Practica.JPA.service.dto.updatePizzaPriceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,11 +67,21 @@ public class PizzaControler {
         }
         return ResponseEntity.badRequest().build();
     }
-    @DeleteMapping("{idPizza}")
-    public ResponseEntity<Void> delete(@PathVariable int idPizza){
-        if(this.pizzaService.exists(idPizza)){
+
+    @PutMapping("/price")
+    public ResponseEntity<Void> updatePrice(@RequestBody updatePizzaPriceDto dto) {
+        if (this.pizzaService.exists(dto.getPizzaId())) {
+            this.pizzaService.updatePrice(dto);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @DeleteMapping("/{idPizza}")
+    public ResponseEntity<Void> delete(@PathVariable int idPizza) {
+        if (this.pizzaService.exists(idPizza)) {
             this.pizzaService.delete(idPizza);
-        return ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.badRequest().build();
     }
