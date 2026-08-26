@@ -1,11 +1,14 @@
 package com.Practica.JPA.service;
 
 import com.Practica.JPA.persistence.entity.PizzaEntity;
+import com.Practica.JPA.persistence.repository.PizzaPagSortRepository;
 import com.Practica.JPA.persistence.repository.PizzaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import  org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
@@ -13,25 +16,32 @@ import java.util.List;
 public class PizzaService {
 
     private final PizzaRepository pizzaRepository;
+    private final PizzaPagSortRepository  pizzaPagSortRepository;
 
     @Autowired //se encarga de la inyeccion de dependencias de todo esos componentes
-    public PizzaService (PizzaRepository pizzaRepository){
+    public PizzaService (PizzaRepository pizzaRepository, PizzaPagSortRepository pizzaPagSortRepository){
         this.pizzaRepository = pizzaRepository;
+        this.pizzaPagSortRepository = pizzaPagSortRepository;
     }
     //recupera todas las pizza de mi base de datos a traves de un controlador
-    public List<PizzaEntity> getAll(){
-        return this.pizzaRepository.findAll();//la cual nos permite retornar todas las pizas por estas con listCrudRepository
+    public Page<PizzaEntity> getAll(int page, int elements){
+        Pageable pageRequest = PageRequest.of(page,elements);
+        return this.pizzaPagSortRepository.findAll(pageRequest);//la cual nos permite retornar todas las pizas por estas con listCrudRepository
     }
 
-    public List<PizzaEntity> getAvailable(){
-        return this.pizzaRepository.findAllByAvaiableTrueOrderByPrice();
+    public Page<PizzaEntity> getAvailable(int page, int elements,String sortBy, String sortDirection){
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection),sortBy);
+        Pageable pageRequest = PageRequest.of(page,elements, sort);
+        return this.pizzaPagSortRepository.findByAvaiableTrue(pageRequest);
+
     }
 
     public PizzaEntity get(int idPizza){
         return this.pizzaRepository.findById(idPizza).orElse(null);
     }
+
     public PizzaEntity getByname(String name){
-        return this.pizzaRepository.findAllByAvaiableTrueAndNameIgnoreCase(name);
+        return this.pizzaRepository.findFirstByAvaiableTrueAndNameIgnoreCase(name).orElseThrow(() -> new RuntimeException("La Pizza no existe"));
     }
 
     public PizzaEntity save(PizzaEntity pizza){
@@ -44,6 +54,11 @@ public class PizzaService {
     }
     public List<PizzaEntity> getWith(String ingredient) {
         return this.pizzaRepository.findAllByAvaiableTrueAndDescriptionContainingIgnoreCase(ingredient);
+
+    }
+
+    public List<PizzaEntity> getCheapest(double price) {
+        return this.pizzaRepository.findTop3ByAvaiableTrueAndPriceLessThanEqualOrderByPriceAsc(price);
 
     }
     public List<PizzaEntity> getWithout(String ingredient) {
