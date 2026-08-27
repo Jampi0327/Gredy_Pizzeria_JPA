@@ -3,9 +3,9 @@ package com.Practica.JPA.service;
 import com.Practica.JPA.persistence.entity.OrderEntity;
 import com.Practica.JPA.persistence.projection.OrderSumary;
 import com.Practica.JPA.persistence.repository.OrderRepository;
+import com.Practica.JPA.service.dto.RandonOrderDto;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.html.parser.Entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -44,5 +44,11 @@ public class OrderService {
 
     public OrderSumary getSumary(int orderId){
         return this.orderRepository.findSumary(orderId);
+    }
+
+    @Transactional
+    public boolean saveRandorOrder(RandonOrderDto randonOrderDto){
+        return this.orderRepository.saveRandonOrder(randonOrderDto.getIdCustomer(), randonOrderDto.getMethod());
+
     }
 }

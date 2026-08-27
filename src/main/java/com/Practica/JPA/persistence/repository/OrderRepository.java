@@ -3,6 +3,7 @@ package com.Practica.JPA.persistence.repository;
 import com.Practica.JPA.persistence.entity.OrderEntity;
 import com.Practica.JPA.persistence.projection.OrderSumary;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -28,4 +29,11 @@ public interface OrderRepository extends ListCrudRepository<OrderEntity , Intege
             "WHERE po.id_order = :orderId " +
             "               GROUP BY po.id_order, cu.name, po.date, po.total",nativeQuery = true)
     OrderSumary findSumary(@Param("orderId") int orderId);
+
+    @Procedure(value = "take_random_pizza_order", outputParameterName = "order_taken")
+    boolean saveRandonOrder(@Param("id_customer") String idCustomer, @Param("method") String method);
+
+
+
+
 }
