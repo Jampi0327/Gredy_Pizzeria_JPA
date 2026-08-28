@@ -48,6 +48,7 @@ public class PizzaControler {
     }
 
     @GetMapping("/available")
+    @CrossOrigin(origins = "http://localhost:4200")
     @Operation(summary = "Listar pizzas disponibles", description = "Obtiene pizzas con estado disponible aplicando paginación y ordenamiento dinámico")
     @ApiResponse(responseCode = "200", description = "Página de pizzas disponibles")
     public ResponseEntity<Page<PizzaEntity>> getAvailable(

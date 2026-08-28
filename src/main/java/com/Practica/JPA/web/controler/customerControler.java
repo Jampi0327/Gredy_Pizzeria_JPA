@@ -1,6 +1,8 @@
 package com.Practica.JPA.web.controler;
 
 import com.Practica.JPA.persistence.entity.CustomerEntity;
+import com.Practica.JPA.persistence.entity.OrderEntity;
+import com.Practica.JPA.service.OrderService;
 import com.Practica.JPA.service.customerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -14,16 +16,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/customers")
 @Tag(name = "Clientes", description = "Operaciones de consulta y administración de clientes")
 public class customerControler {
 
     private final customerService customerService;
+    private final OrderService orderService;
 
     @Autowired
-    public customerControler(customerService customerService) {
+    public customerControler(customerService customerService, OrderService orderService) {
         this.customerService = customerService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/phone/{phone}")
@@ -35,5 +41,9 @@ public class customerControler {
     public ResponseEntity<CustomerEntity> getByPhone(
             @Parameter(description = "Número telefónico del cliente", example = "3155551234") @PathVariable String phone) {
         return ResponseEntity.ok(this.customerService.findByPhone(phone));
+    }
+    @GetMapping("/customers/{id}")
+    public ResponseEntity<List<OrderEntity>> getCustomerOrders( @PathVariable String id) {
+        return ResponseEntity.ok(this.orderService.getCustomerOrders(id));
     }
 }

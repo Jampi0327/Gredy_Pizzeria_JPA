@@ -5,6 +5,7 @@ import com.Practica.JPA.persistence.projection.OrderSumary;
 import com.Practica.JPA.persistence.repository.OrderRepository;
 import com.Practica.JPA.service.dto.RandonOrderDto;
 import jakarta.transaction.Transactional;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,7 +38,7 @@ public class OrderService {
         List<String> methods = Arrays.asList(DELIVERY, CARRYOUT);
         return this.orderRepository.findAllByMethodIn(methods);
     }
-
+    @Secured("ROLE_ADMIN")
     public List<OrderEntity> getCustomerOrders(String idCustomer){
         return this.orderRepository.findCustomerOrder(idCustomer);
     }

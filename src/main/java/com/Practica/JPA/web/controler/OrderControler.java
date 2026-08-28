@@ -51,7 +51,7 @@ public class OrderControler {
     @GetMapping("/customers/{id}")
     @Operation(summary = "Órdenes por cliente", description = "Lista todas las órdenes asociadas al número de identificación de un cliente")
     @ApiResponse(responseCode = "200", description = "Historial de órdenes del cliente")
-    public ResponseEntity<List<OrderEntity>> getCustomerOrders(
+    public ResponseEntity<List<OrderEntity>> getOutsideOrders(
             @Parameter(description = "Identificación del cliente", example = "863264988") @PathVariable String id) {
         return ResponseEntity.ok(this.orderService.getCustomerOrders(id));
     }
