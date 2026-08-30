@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.*;
 public class AuthControler {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil; // 2. Tipo con 'J' mayúscula
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    // 3. Inyección de JwtUtil en los parámetros del constructor
     public AuthControler(AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
@@ -28,7 +27,7 @@ public class AuthControler {
     public ResponseEntity<Void> login(@RequestBody LoginDTO loginDTO) {
         UsernamePasswordAuthenticationToken login = new UsernamePasswordAuthenticationToken(
                 loginDTO.getUsername(),
-                loginDTO.getPasswork()
+                loginDTO.getPassword()
         );
 
         Authentication authentication = this.authenticationManager.authenticate(login);
